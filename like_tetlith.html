@@ -1,0 +1,80 @@
+<html><body>
+<span id="i1"></span>
+<span id="i0"></span>
+<button onClick="iniG()">reset</button>
+<script>
+E0=document.getElementById("i0");
+E1=document.getElementById("i1");
+MA=Array(MM=(MX=7)*(MY=16));
+XY=[];
+CE=[];
+function makeCE(it,x,y){
+ CE[it]=document.createElement("span");
+ CE[it].innerHTML="Å°";
+ CE[it].style.position="absolute";
+ CE[it].style.top=P_XY(y);
+ CE[it].style.left=P_XY(x);
+ document.body.appendChild(CE[it]);
+}
+function bb(){
+ XY[0]=XY[1]=XY[2]=XY[4]=XY[6]=0;
+ XY[3]=XY[5]=XY[7]=XY[9]=1;
+ XY[8]=(MX/2)|0;
+ switch((r=Math.random())!=-1){
+ case(r<0.3):XY[5]=-1;
+ case(r<0.6):XY[4]=XY[5];XY[5]=0;}
+ XY[5]=-XY[5];
+ switch((r=Math.random())!=-1){
+ case(r<0.3):XY[7]=-1;
+ case(r<0.6):XY[6]=XY[7];XY[7]=0;}
+ XY[7]+=1;
+}
+function iniW(){
+ for(let it=0,ity=0;ity<MY;ity++){for(let itx=0;itx<MX;itx++,it++){makeCE(it,itx,ity);}}
+ for(let it=0;it<4;it++){makeCE(it+MM,0,0);}
+ CE[MM].style.color="#ff5555";
+ CE[MM+1].style.color=CE[MM+2].style.color=CE[MM+3].style.color="#55ff00";
+ iniG();
+}
+function iniG(){
+ sc(score=0);
+ E1.innerHTML="fall=[somekey]   move=[a][b][c][d]";
+ for(let it=0,IT=MX;it<IT;it++){cCEB(MM-it-1);}
+ for(let it=0,IT=MM-MX;it<IT;it+=MX){cCEB(MM-it-1);cCEB(it);
+ for(let itx=it+1,ITX=it+MX-1;itx<ITX;itx++){cCEW(itx);}}
+ bb();
+ draw();
+ addEventListener("keydown",EV_KD);
+}
+function draw(){
+ for(let it=0;it<4;it++){
+ CE[it+MM].style.left=P_XY(XY[8]+XY[it*2]);
+ CE[it+MM].style.top=P_XY(XY[9]+XY[it*2+1]);}
+}
+function put(){
+ if((XY[9])<=1){E1.innerHTML="gameover";removeEventListener("keydown",EV_KD);}
+ for(let it=0;it<8;it+=2){
+ cCEB((XY[8]+XY[it])+(y=(XY[9]+XY[it+1])*MX));
+ if(countL(y)==MX){for(let itx=1;itx<MX-1;itx++){cCEW(itx+y);}sc(score+=1);}
+ }
+}
+function EV_KD(){
+ switch(event.keyCode){
+ case(65):moveX(-1);break;
+ case(66):moveT(1);break;
+ case(67):moveT(-1);break;
+ case(68):moveX(1);break;}
+ moveY(1);
+ draw();
+}
+function countL(g,sum=0){for(let itx=0;itx<MX;itx++){sum+=MA[itx+g];}return(sum);}
+function moveT(g){for(let it=0;it<8;it+=2){XY[it]=-g*XY[it+1]+(XY[it+1]=g*XY[it])-XY[it+1];}if(hit()){for(let it=0;it<8;it+=2){XY[it]=g*XY[it+1]+(XY[it+1]=-g*XY[it])-XY[it+1];}}}
+function moveX(g){XY[8]+=g;if(hit()){XY[8]-=g;}}
+function moveY(g){XY[9]+=g;if(hit()){XY[9]-=g;put();bb();}}
+function hit(){for(let it=0;it<8;it+=2){if(MA[(XY[8]+XY[it])+(XY[9]+XY[it+1])*MX]!=0){return(true);}}return(false);}
+function cCEB(g){MA[g]=1;CE[g].style.color="#000000";}
+function cCEW(g){MA[g]=0;CE[g].style.color="#ffffff";}
+function sc(g){E0.innerHTML="score="+g;}
+function P_XY(g){return(g*15+100);}
+window.onload=iniW();
+</script></body></html>
